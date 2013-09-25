@@ -28,8 +28,8 @@ package morn.core.managers {
 			_data = data;
 			if (_dragImage != _dragInitiator) {
 				var p:Point = _dragInitiator.localToGlobal(new Point());
-				_dragImage.x = _dragInitiator.x;
-				_dragImage.y = _dragInitiator.y;
+				_dragImage.x = p.x;
+				_dragImage.y = p.y;
 				App.stage.addChild(_dragImage);
 			}
 			_dragImage.startDrag();
@@ -44,7 +44,9 @@ package morn.core.managers {
 				_dragImage.stopDrag();
 			} else {
 				_dragImage.startDrag();
+				_dragInitiator.dispatchEvent(new DragEvent(DragEvent.DRAG_MOVING, _dragInitiator, _data));
 			}
+			e.updateAfterEvent();
 		}
 		
 		private function onStageMouseUp(e:Event):void {

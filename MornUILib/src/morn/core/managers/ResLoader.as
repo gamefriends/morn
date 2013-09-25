@@ -114,8 +114,8 @@ package morn.core.managers {
 					return;
 				}
 				if (_type == SWF) {
+					content = _loader.content;
 					_loader.unloadAndStop();
-					content = 1;
 				} else {
 					content = Bitmap(_loader.content).bitmapData;
 					_loader.unloadAndStop();

@@ -153,6 +153,7 @@
 		<prop name="showLabel" tips="是否显示标签" type="bool" default="true" />
 		<prop name="sizeGrid" tips="九宫格信息(格式:左边距,上边距,右边距,下边距)" type="string" default="" />
 		<prop name="allowBackClick" tips="是否允许背景点击" type="bool" default="true" />		
+		<prop name="allowChangeThumbSize" tips="拖动条尺寸是否可变" type="bool" default="false" />
 	</Slider>
 	<VSlider className="morn.core.components.VSlider" inherit="Slider" skinLabel="skin" resName="vslider" icon="VSlider" drag="2" />
 	<HSlider className="morn.core.components.HSlider" inherit="Slider" skinLabel="skin" resName="hslider" icon="HSlider" drag="1" />
@@ -163,6 +164,7 @@
 		<prop name="max" tips="最大滚动位置" type="number" default="" />
 		<prop name="scrollSize" tips="点击按钮滚动量" type="number" default="" />
 		<prop name="sizeGrid" tips="九宫格信息(格式:左边距,上边距,右边距,下边距)" type="string" default="" />
+		<prop name="allowChangeThumbSize" tips="拖动条尺寸是否可变" type="bool" default="false" />
 	</ScrollBar>
 	<VScrollBar className="morn.core.components.VScrollBar" inherit="ScrollBar" skinLabel="skin" resName="vscroll" icon="VScrollBar" drag="2" />
 	<HScrollBar className="morn.core.components.HScrollBar" inherit="ScrollBar" skinLabel="skin" resName="hscroll" icon="HScrollBar" drag="1"/>

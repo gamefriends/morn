@@ -19,7 +19,7 @@ package morn.core.components {
 			addEventListener(Event.REMOVED, onRemoved);
 		}
 		
-		private function onRemoved(e:Event):void {
+		protected function onRemoved(e:Event):void {
 			if (e.target == this) {
 				parent.removeEventListener(Event.RESIZE, onResize);
 			}

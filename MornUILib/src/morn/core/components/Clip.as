@@ -58,7 +58,6 @@ package morn.core.components {
 		protected function onRemovedFromStage(e:Event):void {
 			if (_autoStopAtRemoved) {
 				stop();
-				frame = 0;
 			}
 		}
 		

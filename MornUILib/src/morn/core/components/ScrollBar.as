@@ -25,6 +25,7 @@ package morn.core.components {
 		protected var _slider:Slider;
 		protected var _changeHandler:Handler;
 		protected var _thumbPercent:Number;
+		protected var _allowChangeThumbSize:Boolean = false;
 		
 		public function ScrollBar(skin:String = null):void {
 			this.skin = skin;
@@ -41,6 +42,7 @@ package morn.core.components {
 		}
 		
 		override protected function initialize():void {
+			_allowChangeThumbSize = Styles.allowChangeThumbSize;
 			_slider.showLabel = false;
 			_slider.addEventListener(Event.CHANGE, onSliderChange);
 			_upButton.addEventListener(MouseEvent.MOUSE_DOWN, onButtonMouseDown);
@@ -205,11 +207,28 @@ package morn.core.components {
 		public function set thumbPercent(value:Number):void {
 			exeCallLater(changeSize);
 			_thumbPercent = value;
+			if(_allowChangeThumbSize == false){
+				if (_slider.direction == VERTICAL) {
+					_slider.bar.scaleY = 1;
+				} else {
+					_slider.bar.scaleX = 1;
+				}
+				return;
+			}
 			if (_slider.direction == VERTICAL) {
 				_slider.bar.height = _slider.height * value;
 			} else {
 				_slider.bar.width = _slider.width * value;
 			}
+		}
+		public function get allowChangeThumbSize():Boolean
+		{
+			return _allowChangeThumbSize;
+		}
+		
+		public function set allowChangeThumbSize(value:Boolean):void
+		{
+			_allowChangeThumbSize = value;
 		}
 	}
 }

@@ -5,6 +5,7 @@
 package morn.core.components {
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	
 	import morn.core.events.UIEvent;
 	import morn.core.handlers.Handler;
 	import morn.editor.core.IList;
@@ -28,6 +29,78 @@ package morn.core.components {
 		protected var _selectedIndex:int = -1;
 		protected var _array:Array = [];
 		protected var _selectHandler:Handler;
+		protected var _clickHandler:Handler;
+		
+		protected var _mouseDownHandler:Handler;
+		protected var _mouseUpHandler:Handler;
+		private var _spaceX:int;
+		private var _spaceY:int;
+		private var _repeatX:int;
+		private var _repeatY:int;
+
+		public function get spaceX():int
+		{
+			return _spaceX;
+		}
+
+		public function set spaceX(value:int):void
+		{
+			_spaceX = value;
+		}
+
+		public function get spaceY():int
+		{
+			return _spaceY;
+		}
+
+		public function set spaceY(value:int):void
+		{
+			_spaceY = value;
+		}
+
+		public function get repeatX():int
+		{
+			return _repeatX;
+		}
+
+		public function set repeatX(value:int):void
+		{
+			_repeatX = value;
+		}
+
+		public function get repeatY():int
+		{
+			return _repeatY;
+		}
+
+		public function set repeatY(value:int):void
+		{
+			_repeatY = value;
+		}
+
+		public function get isRemoveToCreate():Boolean
+		{
+			return _isRemoveToCreate;
+		}
+
+		public function set isRemoveToCreate(value:Boolean):void
+		{
+			_isRemoveToCreate = value;
+		}
+
+		public function get renderClass():Class
+		{
+			return _renderClass;
+		}
+
+		public function set renderClass(value:Class):void
+		{
+			_renderClass = value;
+		}
+
+
+		private var _isRemoveToCreate:Boolean = false;
+		private var _renderClass:Class;
 		
 		/**批量设置列表项*/
 		public function setItems(items:Array):void {
@@ -67,6 +140,8 @@ package morn.core.components {
 					break;
 				}
 				item.addEventListener(MouseEvent.MOUSE_DOWN, onItemMouse);
+				item.addEventListener(MouseEvent.MOUSE_UP, onItemMouse);
+				item.addEventListener(MouseEvent.CLICK, onItemMouse);
 				if (item.getChildByName("selectBox")) {
 					item.addEventListener(MouseEvent.ROLL_OVER, onItemMouse);
 					item.addEventListener(MouseEvent.ROLL_OUT, onItemMouse);
@@ -85,7 +160,18 @@ package morn.core.components {
 			var index:int = _startIndex + _items.indexOf(item);
 			if (e.type == MouseEvent.MOUSE_DOWN) {
 				selectedIndex = index;
-			} else if (_selectedIndex != index) {
+				if(_mouseDownHandler != null){
+					_mouseDownHandler.executeWith([_selectedIndex]);
+				}
+			}else if(e.type == MouseEvent.MOUSE_UP){
+				if(_mouseUpHandler != null){
+					_mouseUpHandler.executeWith([_selectedIndex]);
+				}
+			}else if(e.type == MouseEvent.CLICK){
+				if(_clickHandler != null){
+					_clickHandler.executeWith([_selectedIndex]);
+				}
+			}else if (_selectedIndex != index) {
 				changeItemState(item, e.type == MouseEvent.ROLL_OVER, 0);
 			}
 		}
@@ -106,6 +192,7 @@ package morn.core.components {
 		public function set selectedIndex(value:int):void {
 			var oldValue:int = _selectedIndex;
 			_selectedIndex = (value < -1 ? -1 : (value >= _array.length ? _array.length - 1 : value));
+			
 			if (oldValue != _selectedIndex) {
 				setSelectStatus();
 				sendEvent(Event.SELECT);
@@ -247,10 +334,47 @@ package morn.core.components {
 		override public function set dataSource(value:Object):void {
 			_dataSource = value;
 			if (value is Array) {
+				if(_isRemoveToCreate == true)
+				{
+					removeToCreateItems();
+				}
 				array = value as Array
 			} else {
 				super.dataSource = value;
 			}
+		}
+		
+		/**
+		 * 给List赋值
+		 * @param data
+		 * @param repeatX
+		 * @param repeatY
+		 * 
+		 */
+		public function setDataSource(data:Object, repeatX:int, repeatY:int):void
+		{
+			this.repeatX = repeatX;
+			this.repeatY = repeatY;
+			this.dataSource = data;
+			sendEvent(Event.RESIZE);
+		}
+		
+		private function removeToCreateItems():void
+		{
+			removeAllChild(_scrollBar);
+			if(!_renderClass){
+				throw new Error("Can not found render class.");
+			}
+			for (var k:int = 0; k < _repeatY; k++) {
+				for (var l:int = 0; l < _repeatX; l++) {
+					var item:Component = new _renderClass();
+					item.name = "item" + (l + k * _repeatX);
+					item.x += l * (_spaceX + item.width);
+					item.y += k * (_spaceY + item.height);
+					addChild(item);
+				}
+			}
+			initItems();
 		}
 		
 		/**滚动单位*/
@@ -272,5 +396,60 @@ package morn.core.components {
 		public function set totalPage(value:int):void {
 			_totalPage = value;
 		}
+
+		/**
+		 * render数量
+		 */
+		public function get itemCount():int
+		{
+			return _itemCount;
+		}
+
+		/**
+		 * 点击时触发
+		 */
+		public function get clickHandler():Handler
+		{
+			return _clickHandler;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set clickHandler(value:Handler):void
+		{
+			_clickHandler = value;
+		}
+
+		/**
+		 * 鼠标抬起触发
+		 */
+		public function get mouseUpHandler():Handler
+		{
+			return _mouseUpHandler;
+		}
+
+		public function set mouseUpHandler(value:Handler):void
+		{
+			_mouseUpHandler = value;
+		}
+
+		/**
+		 * 鼠标按下触发
+		 */
+		public function get mouseDownHandler():Handler
+		{
+			return _mouseDownHandler;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set mouseDownHandler(value:Handler):void
+		{
+			_mouseDownHandler = value;
+		}
+
+
 	}
 }

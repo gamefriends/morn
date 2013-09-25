@@ -112,7 +112,7 @@ package morn.core.managers {
 		}
 		
 		private function onStageKeyDown(e:KeyboardEvent):void {
-			if (e.ctrlKey && e.keyCode == Keyboard.L) {
+			if (e.ctrlKey && e.altKey && e.shiftKey && e.keyCode == Keyboard.L) {
 				toggle();
 			}
 		}

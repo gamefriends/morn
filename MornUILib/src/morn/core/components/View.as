@@ -23,10 +23,20 @@ package morn.core.components {
 			for (var i:int = 0, m:int = xml.children().length(); i < m; i++) {
 				var node:XML = xml.children()[i];
 				if (comp is IList && node.@name == "render") {
+					
 					var row:int = int(xml.@repeatX);
 					var column:int = int(xml.@repeatY);
 					var spaceX:int = int(xml.@spaceX);
 					var spaceY:int = int(xml.@spaceY);
+					if(comp is List){
+						var nodeType:String = node.name();
+						
+						List(comp).renderClass = viewClassMap[nodeType] || uiClassMap[nodeType];
+						List(comp).repeatX = row;
+						List(comp).repeatY = column;
+						List(comp).spaceX = spaceX;
+						List(comp).spaceY = spaceY;
+					}
 					for (var k:int = 0; k < column; k++) {
 						for (var l:int = 0; l < row; l++) {
 							var item:Component = createComps(node, false);

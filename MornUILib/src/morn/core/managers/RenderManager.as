@@ -26,7 +26,11 @@ package morn.core.managers {
 			render();
 			App.stage.dispatchEvent(new Event(UIEvent.RENDER_COMPLETED));
 		}
-		
+		/**执行所有延迟调用*/
+		public function exeAllCallLater():void {
+			onValidate(null);
+		}
+
 		private function render():void {
 			for (var method:Object in _methods) {
 				exeCallLater(method as Function);

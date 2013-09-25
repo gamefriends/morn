@@ -37,5 +37,10 @@ package morn.core.components {
 		//-----------------ComboBox-----------------
 		/**下拉框项颜色[overBgColor,overLabelColor,outLabelColor,borderColor,bgColor]*/
 		public static var comboBoxItemColors:Array = [0x5e95b6, 0xffffff, 0x000000, 0x8fa4b1, 0xffffff];
+		//-----------------Slider-----------------
+		/**
+		 * 是否更改Thumb绽放比例
+		 */
+		public static var allowChangeThumbSize:Boolean = false;
 	}
 }

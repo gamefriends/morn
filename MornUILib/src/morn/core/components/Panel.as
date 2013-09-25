@@ -121,7 +121,10 @@ package morn.core.components {
 		
 		public function set vScrollBarSkin(value:String):void {
 			if (_vScrollBar == null) {
-				super.addChild(_vScrollBar = new VScrollBar());
+				_vScrollBar = getChildByName("vScrollBar") as VScrollBar;
+				if(!_vScrollBar){
+					super.addChild(_vScrollBar = new VScrollBar());
+				}
 				_vScrollBar.addEventListener(Event.CHANGE, onScrollBarChange);
 				addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 				callLater(changeScroll);
@@ -136,7 +139,10 @@ package morn.core.components {
 		
 		public function set hScrollBarSkin(value:String):void {
 			if (_hScrollBar == null) {
-				super.addChild(_hScrollBar = new HScrollBar());
+				_hScrollBar = getChildByName("hScrollBar") as HScrollBar;
+				if(!_hScrollBar){
+					super.addChild(_hScrollBar = new HScrollBar());
+				}
 				_hScrollBar.addEventListener(Event.CHANGE, onScrollBarChange);
 				callLater(changeScroll);
 			}

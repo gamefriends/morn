@@ -11,6 +11,7 @@ package morn.core.events {
 		public static const DRAG_START:String = "dragStart";
 		public static const DRAG_DROP:String = "dragDrop";
 		public static const DRAG_COMPLETE:String = "dragComplete";
+		public static const DRAG_MOVING:String = "dragMoving";
 		
 		protected var _data:Object;
 		protected var _dragInitiator:DisplayObject;

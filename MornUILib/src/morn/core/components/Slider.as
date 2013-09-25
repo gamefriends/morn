@@ -6,10 +6,16 @@ package morn.core.components {
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
+	
+	import morn.core.events.UIEvent;
 	import morn.core.handlers.Handler;
 	
 	/**滑动条变化后触发*/
 	[Event(name="change",type="flash.events.Event")]
+	/**
+	 * 由交互操作产生的滑动变化后触发
+	 */	
+	[Event(name="interactiveChange", type="morn.core.events.UIEvent")]
 	
 	/**滑动条*/
 	public class Slider extends Component {
@@ -29,6 +35,9 @@ package morn.core.components {
 		protected var _label:Label;
 		protected var _showLabel:Boolean = true;
 		protected var _changeHandler:Handler;
+		protected var _interactiveChangeHandler:Handler;
+		protected var _labelHandler:Handler;
+		protected var _allowChangeThumbSize:Boolean = false;
 		
 		public function Slider(skin:String = null):void {
 			this.skin = skin;
@@ -45,6 +54,7 @@ package morn.core.components {
 		}
 		
 		override protected function initialize():void {
+			_allowChangeThumbSize = Styles.allowChangeThumbSize;
 			_bar.addEventListener(MouseEvent.MOUSE_DOWN, onButtonMouseDown);
 			_back.sizeGrid = _bar.sizeGrid = "4,4,4,4";
 			allowBackClick = true;
@@ -64,7 +74,11 @@ package morn.core.components {
 		
 		protected function showValueText():void {
 			if (_showLabel) {
-				_label.text = _value + "";
+				if(_labelHandler != null){
+					_labelHandler.executeWith([_label, _value]);
+				}else{
+					_label.text = _value + "";
+				}
 				if (_direction == HORIZONTAL) {
 					_label.y = _bar.y - 20;
 					_label.x = (_bar.width - _label.width) * 0.5 + _bar.x;
@@ -97,6 +111,16 @@ package morn.core.components {
 			if (_value != oldValue) {
 				showValueText();
 				sendChangeEvent();
+				sendInteractiveChangeEvent();
+			}
+		}
+		
+		protected function sendInteractiveChangeEvent():void
+		{
+			sendEvent(UIEvent.INTERACTIVE_CHANGE);
+			if(_interactiveChangeHandler != null)
+			{
+				_interactiveChangeHandler.executeWith([_value]);
 			}
 		}
 		
@@ -127,7 +151,14 @@ package morn.core.components {
 			super.changeSize();
 			_back.width = width;
 			_back.height = height;
+			if(_allowChangeThumbSize == false)
+			{
+				_bar.scaleX = 1;
+				_bar.scaleY = 1;
+			}
 			setBarPoint();
+			//解决退出全屏后，不能还原位置的BUG
+			changeValue();
 		}
 		
 		protected function setBarPoint():void {
@@ -267,6 +298,54 @@ package morn.core.components {
 		/**控制按钮*/
 		public function get bar():Button {
 			return _bar;
+		}
+
+		public function get changeHandler():Handler
+		{
+			return _changeHandler;
+		}
+
+		public function set changeHandler(value:Handler):void
+		{
+			_changeHandler = value;
+		}
+
+		/**
+		 * 由交互产生的数据变化
+		 */
+		public function get interactiveChangeHandler():Handler
+		{
+			return _interactiveChangeHandler;
+		}
+
+		public function set interactiveChangeHandler(value:Handler):void
+		{
+			_interactiveChangeHandler = value;
+		}
+
+		/**
+		 * label文字显示处理
+		 * <li>参数： label
+		 * <li>参数： value
+		 */
+		public function get labelHandler():Handler
+		{
+			return _labelHandler;
+		}
+
+		public function set labelHandler(value:Handler):void
+		{
+			_labelHandler = value;
+		}
+
+		public function get allowChangeThumbSize():Boolean
+		{
+			return _allowChangeThumbSize;
+		}
+
+		public function set allowChangeThumbSize(value:Boolean):void
+		{
+			_allowChangeThumbSize = value;
 		}
 	}
 }

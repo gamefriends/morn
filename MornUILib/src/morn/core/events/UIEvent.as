@@ -25,10 +25,21 @@ package morn.core.events {
 		//-----------------FrameClip-----------------
 		/**帧跳动*/
 		public static const FRAME_CHANGED:String = "frameChanged";
+		/**
+		 * 播到指定帧完成播放
+		 */
+		public static const FRAME_FINISHED:String = "frameFinished";
 		//-----------------List-----------------
 		/**项渲染*/
 		public static const ITEM_RENDER:String = "listRender";
-		
+		/**
+		 * 音量变化
+		 */
+		public static const VOLUME_CHANGE:String = "volumeChange";
+		/**
+		 * 由交互操作产生的变化
+		 */
+		public static const INTERACTIVE_CHANGE:String = "interactiveChange";
 		private var _data:*;
 		
 		public function UIEvent(type:String, data:*, bubbles:Boolean = false, cancelable:Boolean = false) {
